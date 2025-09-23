@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Quotes - Inspiration Every Day</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .app-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .app-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        .quote-container {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 20px;
+            padding: 40px 30px;
+            margin: 30px 0;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .quote-text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: #2c3e50;
+            font-style: italic;
+            margin-bottom: 20px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quote-author {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+
+        .quote-marks {
+            position: absolute;
+            font-size: 4rem;
+            color: #667eea;
+            opacity: 0.3;
+            font-family: Georgia, serif;
+        }
+
+        .quote-marks.left {
+            top: 10px;
+            left: 20px;
+        }
+
+        .quote-marks.right {
+            bottom: 10px;
+            right: 20px;
+            transform: rotate(180deg);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48dbfb, #0abde3);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 219, 251, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #feca57, #ff9ff3);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(254, 202, 87, 0.3);
+        }
+
+        .favorites-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .favorites-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .favorites-list {
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: left;
+        }
+
+        .favorite-item {
+            background: rgba(102, 126, 234, 0.05);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .favorite-quote {
+            flex: 1;
+        }
+
+        .favorite-text {
+            font-style: italic;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .favorite-author {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .remove-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .remove-btn:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+
+        .date-info {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        .loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #48dbfb, #0abde3);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(72, 219, 251, 0.3);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .app-title {
+                font-size: 2rem;
+            }
+
+            .quote-text {
+                font-size: 1.2rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+
+        .empty-favorites {
+            color: #7f8c8d;
+            font-style: italic;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1 class="app-title">Daily Quotes</h1>
+            <p class="app-subtitle">Find inspiration every day</p>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote-marks left">"</div>
+            <div class="quote-marks right">"</div>
+            <div id="quote-text" class="quote-text loading">Loading your daily inspiration...</div>
+            <div id="quote-author" class="quote-author"></div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="getNewQuote()">
+                🔄 New Quote
+            </button>
+            <button class="btn btn-secondary" onclick="addToFavorites()">
+                ❤️ Favorite
+            </button>
+            <button class="btn btn-success" onclick="shareQuote()">
+                📤 Share
+            </button>
+            <button class="btn btn-warning" onclick="toggleFavorites()">
+                📚 My Favorites
+            </button>
+        </div>
+
+        <div class="date-info" id="date-info"></div>
+
+        <div id="favorites-section" class="favorites-section" style="display: none;">
+            <h2 class="favorites-title">My Favorite Quotes</h2>
+            <div id="favorites-list" class="favorites-list">
+                <div class="empty-favorites">No favorite quotes yet. Start adding some!</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Array of inspiring quotes
+        const quotes = [
+            { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+            { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
+            { text: "Life is what happens to you while you're busy making other plans.", author: "John Lennon" },
+            { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+            { text: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" },
+            { text: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
+            { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+            { text: "The only person you are destined to become is the person you decide to be.", author: "Ralph Waldo Emerson" },
+            { text: "Your limitation—it's only your imagination.", author: "Unknown" },
+            { text: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
+            { text: "Great things never come from comfort zones.", author: "Unknown" },
+            { text: "Dream it. Wish it. Do it.", author: "Unknown" },
+            { text: "Success doesn't just find you. You have to go out and get it.", author: "Unknown" },
+            { text: "The harder you work for something, the greater you'll feel when you achieve it.", author: "Unknown" },
+            { text: "Don't stop when you're tired. Stop when you're done.", author: "Unknown" },
+            { text: "Wake up with determination. Go to bed with satisfaction.", author: "Unknown" },
+            { text: "Do something today that your future self will thank you for.", author: "Sean Patrick Flanery" },
+            { text: "Little things make big days.", author: "Unknown" },
+            { text: "It's going to be hard, but hard does not mean impossible.", author: "Unknown" },
+            { text: "Don't wait for opportunity. Create it.", author: "Unknown" },
+            { text: "Sometimes we're tested not to show our weaknesses, but to discover our strengths.", author: "Unknown" },
+            { text: "The key to success is to focus on goals, not obstacles.", author: "Unknown" },
+            { text: "Dream bigger. Do bigger.", author: "Unknown" },
+            { text: "Don't be afraid to give yourself everything you've ever wanted in life.", author: "Unknown" },
+            { text: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis" },
+            { text: "Be yourself; everyone else is already taken.", author: "Oscar Wilde" },
+            { text: "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.", author: "Albert Einstein" },
+            { text: "You only live once, but if you do it right, once is enough.", author: "Mae West" },
+            { text: "Be the change that you wish to see in the world.", author: "Mahatma Gandhi" },
+            { text: "In three words I can sum up everything I've learned about life: it goes on.", author: "Robert Frost" }
+        ];
+
+        let currentQuote = null;
+        let favorites = JSON.parse(localStorage.getItem('favoriteQuotes') || '[]');
+        let showingFavorites = false;
+
+        // Initialize the app
+        function initApp() {
+            displayTodaysQuote();
+            updateDateInfo();
+            updateFavoritesList();
+        }
+
+        // Display today's quote based on date
+        function displayTodaysQuote() {
+            const today = new Date();
+            const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            const quoteIndex = dayOfYear % quotes.length;
+            
+            currentQuote = quotes[quoteIndex];
+            displayQuote(currentQuote);
+        }
+
+        // Get a new random quote
+        function getNewQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            currentQuote = quotes[randomIndex];
+            displayQuote(currentQuote);
+        }
+
+        // Display a quote
+        function displayQuote(quote) {
+            const quoteText = document.getElementById('quote-text');
+            const quoteAuthor = document.getElementById('quote-author');
+            
+            quoteText.classList.add('loading');
+            quoteAuthor.classList.add('loading');
+            
+            setTimeout(() => {
+                quoteText.textContent = quote.text;
+                quoteAuthor.textContent = `— ${quote.author}`;
+                quoteText.classList.remove('loading');
+                quoteAuthor.classList.remove('loading');
+            }, 300);
+        }
+
+        // Add current quote to favorites
+        function addToFavorites() {
+            if (!currentQuote) return;
+            
+            const isAlreadyFavorite = favorites.some(fav => 
+                fav.text === currentQuote.text && fav.author === currentQuote.author
+            );
+            
+            if (isAlreadyFavorite) {
+                showNotification('Quote already in favorites!', '#ff6b6b');
+                return;
+            }
+            
+            favorites.push({
+                ...currentQuote,
+                dateAdded: new Date().toLocaleDateString()
+            });
+            
+            localStorage.setItem('favoriteQuotes', JSON.stringify(favorites));
+            updateFavoritesList();
+            showNotification('Added to favorites! ❤️', '#48dbfb');
+        }
+
+        // Share current quote
+        function shareQuote() {
+            if (!currentQuote) return;
+            
+            const shareText = `"${currentQuote.text}" — ${currentQuote.author}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Daily Quote',
+                    text: shareText,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(shareText).then(() => {
+                    showNotification('Quote copied to clipboard! 📋', '#48dbfb');
+                }).catch(() => {
+                    // Manual fallback
+                    const textArea = document.createElement('textarea');
+                    textArea.value = shareText;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showNotification('Quote copied to clipboard! 📋', '#48dbfb');
+                });
+            }
+        }
+
+        // Toggle favorites section
+        function toggleFavorites() {
+            const favoritesSection = document.getElementById('favorites-section');
+            showingFavorites = !showingFavorites;
+            
+            if (showingFavorites) {
+                favoritesSection.style.display = 'block';
+                document.querySelector('.btn-warning').textContent = '🔙 Back to Quotes';
+            } else {
+                favoritesSection.style.display = 'none';
+                document.querySelector('.btn-warning').textContent = '📚 My Favorites';
+            }
+        }
+
+        // Update favorites list display
+        function updateFavoritesList() {
+            const favoritesList = document.getElementById('favorites-list');
+            
+            if (favorites.length === 0) {
+                favoritesList.innerHTML = '<div class="empty-favorites">No favorite quotes yet. Start adding some!</div>';
+                return;
+            }
+            
+            favoritesList.innerHTML = favorites.map((quote, index) => `
+                <div class="favorite-item">
+                    <div class="favorite-quote">
+                        <div class="favorite-text">"${quote.text}"</div>
+                        <div class="favorite-author">— ${quote.author} (Added: ${quote.dateAdded})</div>
+                    </div>
+                    <button class="remove-btn" onclick="removeFavorite(${index})">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        // Remove a favorite quote
+        function removeFavorite(index) {
+            favorites.splice(index, 1);
+            localStorage.setItem('favoriteQuotes', JSON.stringify(favorites));
+            updateFavoritesList();
+            showNotification('Removed from favorites', '#e74c3c');
+        }
+
+        // Update date information
+        function updateDateInfo() {
+            const today = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            document.getElementById('date-info').textContent = 
+                `Today is ${today.toLocaleDateString('en-US', options)}`;
+        }
+
+        // Show notification
+        function showNotification(message, color = '#48dbfb') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.background = `linear-gradient(135deg, ${color}, ${color}dd)`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        // Update quote daily (check every hour)
+        setInterval(() => {
+            const now = new Date();
+            if (now.getHours() === 0 && now.getMinutes() === 0) {
+                displayTodaysQuote();
+                updateDateInfo();
+                showNotification('New daily quote loaded! ✨', '#feca57');
+            }
+        }, 60000); // Check every minute
+    </script>
+</body>
+</html>
